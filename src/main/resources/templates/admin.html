@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>Person Manager</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <style>
+        body {
+            font-family: "Lato", sans-serif;
+            background: #eee;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 160px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background: white;
+            overflow-x: hidden;
+            padding-top: 20px;
+            margin-top: 40px;
+        }
+
+        .sidenav a {
+            padding: 6px 8px 6px 16px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #2196F3;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: #064579;
+        }
+
+        .main {
+            margin-left: 160px; /* Same as the width of the sidenav */
+            font-size: 28px; /* Increased text to enable scrolling */
+            padding: 0px 10px;
+
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
+        }
+
+        .navbar-nav {
+            position: absolute;
+            right: 30px;
+            top: 6px;
+            background: #343a40 !important;
+        }
+
+        .navbar {
+            height: 40px;
+        }
+
+        .navtable {
+            color: aliceblue;
+        }
+
+        .panel {
+            margin-top: 14px;
+            margin-left: 30px;
+        }
+
+        .nav-tabs {
+            margin-left: 30px;
+        }
+
+        .nav-link {
+            font-size: 15px;
+
+        }
+
+        .header {
+            padding-left: 10px;
+            padding-right: 40px;
+            width: 100%;
+            background: #eee;
+            border: solid;
+            border-width: thin;
+            border-color: floralwhite;
+        }
+
+        .table {
+            background: white;
+            size: auto;
+            padding: 10px;
+            font-size: medium;
+        }
+
+        .dtable {
+            padding: 30px;
+        }
+
+        .content {
+            background: white;
+            border: solid;
+            border-width: thin;
+            border-color: floralwhite;
+            width: 95%;
+
+        }
+
+        .newtable {
+            width: 50%;
+            margin: auto;
+        }
+
+        .form-group {
+            height: 65%;
+            font-size: medium;
+        }
+
+        .btn-info {
+            background-color: green;
+            margin-top: 6px;
+        }
+        .edit-button{
+            color: #fff;
+            background-color: green;
+            border-color: green;
+        }
+        .delete-button{
+            color: #fff;
+            background-color: red;
+            border-color: red;
+        }
+    </style>
+
+
+</head>
+<body>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <!-- Links -->
+    <div class="navbar-nav">
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+    <!-- Navbar text-->
+
+    <div class="info" id="panelInfo">
+
+    </div>
+</nav>
+<div class="sidenav">
+    <div class="container">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#maintab">Admin</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" id="userData" href="#hellotab">User</a>
+            </li>
+        </ul>
+    </div>
+
+
+</div>
+<div class="tab-content">
+
+<div class="tab-pane fade show active" id="maintab" >
+<div class="main"   align="center">
+    <div class="panel">
+        <h1 align="left">Admin panel</h1>
+    </div>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" id="tableTab" href="#tableuser" onclick="ajaxAdmin()">Users table</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#newuser">New user</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="tableuser" >
+            <div class="content">
+                <div class="header">
+                    <h3 align="left">All users</h3>
+                </div>
+                <div class="dtable">
+                    <table class="table table-striped" id="table-rows">
+                        <thead>
+                        <tr>
+                            <th> ID</th>
+                            <th>GivenName</th>
+                            <th>SurName</th>
+                            <th>Email</th>
+                            <th>Age</th>
+                            <th>Roles</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="newuser" >
+            <div class="content">
+                <div class="header"><h3 align="left"> Add user</h3></div>
+                <div class="newtable">
+                    <form  id="userform" method="post">
+
+                        <div class=form-group>
+                            <label for="text">First Name:</label>
+                            <input type="text" class="form-control" id="givenname" placeholder="Enter name"
+                                   name="firstname" >
+                        </div>
+                        <div class=form-group>
+                            <label for="text">Sur Name:</label>
+                            <input type="text" class="form-control" id="surname" placeholder="Enter surname"
+                                   name="surname" >
+                        </div>
+                        <div class=form-group>
+                            <label for="text">Age:</label>
+                            <input type="text" class="form-control" id="age" placeholder="Enter age"
+                                   name="age" >
+                        </div>
+                        <div class=form-group>
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter email"
+                                   name="email" >
+                        </div>
+                        <div class=form-group>
+                            <label for="password">Password:</label>
+                            <input type="password" class="form-control" id="password"
+                                   placeholder="Enter password"
+                                   name="password" >
+                        </div>
+                        <div class="form-group">
+                            <label for="roles">ROLE</label>
+                            <select name="roles" class="custom-select " id="roles" >
+                                <option selected>Role</option>
+                                <option >ADMIN</option>
+                                <option >USER</option>
+                            </select>
+                            <button class="btn btn-info" type="submit">Add new user</button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+</div>
+</div>
+</div>
+<div class="tab-pane fade " id="hellotab" >
+<div class="hello"  align="center">
+
+
+    <div class="main" align="center">
+        <div class="panel">
+            <h1 align="left">User information-page</h1>
+        </div>
+        <div class="content">
+            <div class="header">
+                <h3 align="left">About user</h3>
+            </div>
+            <div class="dtable">
+                <table class="table table-striped" id="table-rows1">
+                    <thead>
+                    <tr>
+                        <th> ID</th>
+                        <th>GivenName</th>
+                        <th>SurName</th>
+                        <th>Email</th>
+                        <th>Age</th>
+                        <th>Roles</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="modal fade" id="editModel" >
+    <div class="modal-dialog modal-sm-dialog-centered">
+        <div class="modal-content">
+            <form method="post"  id="editform">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit user</h4>
+                    <button type="button"  class="close" data-dismiss="modal">&times;
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class=newtable>
+                        <div class=form-group>
+                            <label for="text">ID:</label>
+                            <input type="text" readonly placeholder="id"
+                                   class="form-control" id="eid" value=" "
+                                   name="id" >
+                        </div>
+                        <div class=form-group>
+                            <label for="text">First Name:</label>
+                            <input type="text" class="form-control" id="efirstname"
+                                    name="givenName">
+                        </div>
+                        <div class=form-group>
+                            <label for="text">Sur Name:</label>
+                            <input type="text" class="form-control" id="esurname"
+                                    name="surName">
+                        </div>
+                        <div class=form-group>
+                            <label for="text">Age:</label>
+                            <input type="text" class="form-control" id="eage"
+                                    name="age">
+                        </div>
+                        <div class=form-group>
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="eemail"
+                                    name="email">
+                        </div>
+                        <div class=form-group>
+                            <label for="password">Password:</label>
+                            <input type="password" class="form-control"
+                                   id="epassword"
+                                    name="password">
+                        </div>
+                        <div class="form-group">
+                            <select name="roles" class="custom-select "id="eroles">
+                                <option value="admin">ADMIN</option>
+                                <option value="user">USER</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="ajaxAdmin()"
+                            data-dismiss="modal">Close
+                    </button>
+                    <button type="submit" class="btn btn-info">Edit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteModel" >
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" id="deleteForm" >
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete user</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class=newtable>
+                        <div class=form-group>
+                            <label for="text">ID:</label>
+                            <input type="text" readonly placeholder="id"
+                                   class="form-control" id="did"
+                                   name="id" >
+                        </div>
+                        <div class=form-group>
+                            <label for="text">First Name:</label>
+                            <input type="text" readonly class="form-control" id="dfirstname"
+                                    name="givenName">
+                        </div>
+                        <div class=form-group>
+                            <label for="text">Sur Name:</label>
+                            <input type="text" readonly class="form-control" id="dsurname"
+                                    name="surName">
+                        </div>
+                        <div class=form-group>
+                            <label for="text">Age:</label>
+                            <input type="text" readonly class="form-control" id="dage"
+                                    name="age">
+                        </div>
+                        <div class=form-group>
+                            <label for="email">Email:</label>
+                            <input type="email" readonly class="form-control" id="demail"
+                                    name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="roles">Role:</label>
+                            <input type="text" readonly class="form-control" id="droles"
+                                   name="role">
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="ajaxAdmin()"
+                            data-dismiss="modal">Close
+                    </button>
+                    <button type="submit"  class="btn btn-info">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="admin.js"></script>
+<script type="text/javascript" src="add.js"></script>
+<script type="text/javascript" src="edit.js"></script>
+<script type="text/javascript" src="delete.js"></script>
+<script type="text/javascript" src="panel.js"></script>
+<script type="text/javascript" src="userNav.js"></script>
+</body>
+</html>

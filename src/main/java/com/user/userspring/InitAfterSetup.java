@@ -4,6 +4,7 @@ import com.user.userspring.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
 import java.util.Collections;
 
 
@@ -20,9 +21,9 @@ public class InitAfterSetup {
     }
 
     public void init() {
-        Person pavel = personService.findByGivenName("pavel");
+        Person pavel = personService.findByEmail("pasha@mail.ru");
         if (pavel == null) {
-            Person person = new Person("pavel", "herson", "123", 97, Collections.singleton(new Role("ADMIN")));
+            Person person = new Person("pavel", "herson","pasha@mail.ru", "123", 97, Collections.singleton(new Role("ADMIN")));
             personService.addPerson(person);
         }
     }

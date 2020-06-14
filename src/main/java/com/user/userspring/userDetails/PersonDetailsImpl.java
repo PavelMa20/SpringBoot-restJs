@@ -18,9 +18,9 @@ public class PersonDetailsImpl implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String givenName) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        Person person = personService.findByGivenName(givenName);
+        Person person = personService.findByEmail(email);
          if(person==null){
              throw new UsernameNotFoundException("Invalid username or password");
          }

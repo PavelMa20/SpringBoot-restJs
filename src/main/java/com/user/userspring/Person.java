@@ -23,12 +23,17 @@ public class Person implements UserDetails {
     private String givenName;
     @Column(name = "surName")
     private String surName;
+    @Column(name = "email")
+    private String email;
     @Column(name = "password")
     private String password;
     @Column(name = "age")
     private int age;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
+    /*@Formula(String joinedString = String.join(" ", new ArrayList<String>(getRoles())); // "04 - 05 - 06"
+    )
+    private String role;*/
 
 
     public Set<Role> getRoles() {
@@ -36,10 +41,11 @@ public class Person implements UserDetails {
     }
 
 
-    public Person(String givenName, String surName, String password, int age, Set<Role> roles) {
+    public Person(String givenName, String surName,String email, String password, int age, Set<Role> roles) {
         this.givenName = givenName;
         this.surName = surName;
         this.password = password;
+        this.email = email;
         this.age = age;
         this.roles = roles;
 
@@ -91,23 +97,7 @@ public class Person implements UserDetails {
         this.age = age;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Person)) return false;
-        Person user = (Person) o;
-        return getAge() == user.getAge() &&
-                getId().equals(user.getId()) &&
-                getGivenName().equals(user.getGivenName()) &&
-                surName.equals(user.surName) &&
-                getPassword().equals(user.getPassword()) &&
-                getRoles().equals(user.getRoles());
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getGivenName(), surName, getPassword(), getAge(), getRoles());
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -146,5 +136,32 @@ public class Person implements UserDetails {
 
     public void setSurName(String surName) {
         this.surName = surName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Person)) return false;
+        Person person = (Person) o;
+        return getAge() == person.getAge() &&
+                getId().equals(person.getId()) &&
+                getGivenName().equals(person.getGivenName()) &&
+                getSurName().equals(person.getSurName()) &&
+                getEmail().equals(person.getEmail()) &&
+                getPassword().equals(person.getPassword()) &&
+                getRoles().equals(person.getRoles());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getGivenName(), getSurName(), getEmail(), getPassword(), getAge(), getRoles());
     }
 }

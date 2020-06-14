@@ -17,5 +17,7 @@ public interface PersonService {
 
     Person findByGivenName(String name);
 
+    Person findByEmail(String email);
+
     void removePerson(long id) throws Exception;
 }

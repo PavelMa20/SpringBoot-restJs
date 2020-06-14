@@ -26,12 +26,13 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         Person authUser = (Person) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         for (GrantedAuthority role : roles) {
+
             if (role.getAuthority().equals("ADMIN")) {
 
-                httpServletResponse.sendRedirect("/admin/list");
-                return;
+                httpServletResponse.sendRedirect("/admin");
+                return ;
             } else {
-                httpServletResponse.sendRedirect("/hello?id=" + authUser.getId());
+                httpServletResponse.sendRedirect("/hello");
             }
         }
     }

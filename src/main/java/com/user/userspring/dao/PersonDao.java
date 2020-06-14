@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PersonDao extends JpaRepository<Person,Long> {
     Person findByGivenName(String givenName);
+    Person findByEmail(String email);
 }

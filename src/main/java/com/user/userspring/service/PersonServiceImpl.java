@@ -5,6 +5,7 @@ import com.user.userspring.dao.PersonDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -60,6 +61,12 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Person findByGivenName(String givenName) {
         return personDao.findByGivenName(givenName);
+    }
+
+    @Transactional
+    @Override
+    public Person findByEmail(String email) {
+        return personDao.findByEmail(email);
     }
 
     @Transactional
